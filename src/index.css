@@ -1,0 +1,26 @@
+/* Import Tailwind CSS */
+@import "tailwindcss";
+
+
+/* Custom Theme Color */
+:root {
+  --color-primary: #008994;
+  --color-primary-dark: #006d76;
+}
+
+/* Light Theme Gradient Background */
+html {
+  background: linear-gradient(135deg,
+    rgba(0, 137, 148, 0.08) 0%,
+    rgba(173, 216, 230, 0.12) 25%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(173, 216, 230, 0.12) 75%,
+    rgba(0, 137, 148, 0.08) 100%
+  );
+  min-height: 100vh;
+}
+
+body {
+  background: transparent;
+  transition: background 0.3s ease;
+}
