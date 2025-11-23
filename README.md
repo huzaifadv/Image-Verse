@@ -49,14 +49,15 @@ npm install
 # 3. Start development server
 npm run dev
 
-The app will open at http://localhost:5173.
 
+## 📄 License
 
-📄 License
-Distributed under the MIT License. See LICENSE for more information.
+Distributed under the **MIT License**. See `LICENSE` for more information.
 
 <div align="center">
+  
+**This Tool Built by Huzaifa**
 
-Built with ❤️ by the ImageVerse Team
+[⬆ Back to Top](#imageverse---professional-image-editing-suite)
 
 </div>
