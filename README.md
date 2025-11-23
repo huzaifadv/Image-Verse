@@ -39,14 +39,8 @@
 ## 📄 License
 
 Distributed under the **MIT License**. See `LICENSE` for more information.
-
-<div align="center">
   
 **This Tool Built by Huzaifa**
-
-[⬆ Back to Top](#imageverse---professional-image-editing-suite)
-
-</div>
 
 
 ## 🚀 Quick Start
