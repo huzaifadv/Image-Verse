@@ -107,18 +107,18 @@ const Home = () => {
 
         {/* Hero Section */}
         <section className="py-12 sm:py-16 md:py-20 lg:py-25 px-4 sm:px-6 md:px-8 text-center">
-          <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-5 bg-[#008994]/10 text-[#006d76] border border-[#008994]/20">
+          <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-5 bg-[#008994]/10 text-[#006d76] border border-[#008994]/20 fade-in-up">
             100% Free • No Sign-up Required • Privacy First
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[80px] font-bold mb-4 sm:mb-5 md:mb-6 text-black leading-tight px-2">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[80px] font-bold mb-4 sm:mb-5 md:mb-6 text-black leading-tight px-2 fade-in-up delay-100">
             Discover <span className="font-bold" style={{ color: '#008994' }}>ImageVerse</span>
           </h1>
 
-          <p className="text-sm sm:text-base md:text-lg lg:text-[17px] mb-6 sm:mb-7 md:mb-8 max-w-xl md:max-w-2xl mx-auto text-gray-700 px-4 leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg lg:text-[17px] mb-6 sm:mb-7 md:mb-8 max-w-xl md:max-w-2xl mx-auto text-gray-700 px-4 leading-relaxed fade-in-up delay-200">
             Here you can use image tools including Image Compression, Image Upscaling, Background Removal, Format Conversion, and Image Resizing.
           </p>
 
-          <button className="px-8 sm:px-10 md:px-12 cursor-pointer py-2.5 sm:py-3 bg-[#008994] text-white rounded-full text-sm sm:text-base md:text-[17px] font-medium hover:bg-[#006d76] transition-colors duration-300 shadow-lg hover:shadow-xl">
+          <button className="px-8 sm:px-10 md:px-12 cursor-pointer py-2.5 sm:py-3 bg-[#008994] text-white rounded-full text-sm sm:text-base md:text-[17px] font-medium hover:bg-[#006d76] transition-colors duration-300 shadow-lg hover:shadow-xl fade-in-up delay-300">
             Explore Tools
           </button>
 
@@ -130,11 +130,11 @@ const Home = () => {
           <div className="container mx-auto">
 
             <div className="grid grid-cols-1 text-center sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto">
-              {tools.map((tool) => (
+              {tools.map((tool, index) => (
                 <div
                   key={tool.id}
                   onClick={() => handleToolSelect(tool)}
-                  className="cursor-pointer p-5 sm:p-6 md:p-7 rounded-xl border border-white/10 bg-white/50 backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/60 transition-all duration-300"
+                  className={`cursor-pointer p-5 sm:p-6 md:p-7 rounded-xl border border-white/10 bg-white/50 backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/60 transition-all duration-300 fade-in-up delay-${(index % 3 + 1) * 100}`}
                 >
                   {/* Tool Icon */}
                   <div className="my-3 sm:my-4 md:my-5 flex justify-center">
@@ -172,7 +172,7 @@ const Home = () => {
         {/* CTA Section */}
         <section className="px-4 sm:px-6 md:px-8 pb-16 sm:pb-24 md:pb-30">
           <div className="container mx-auto max-w-5xl">
-            <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#008994] to-[#006d76] p-6 sm:p-8 md:p-10 lg:p-12 text-center shadow-2xl">
+            <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#008994] to-[#006d76] p-6 sm:p-8 md:p-10 lg:p-12 text-center shadow-2xl fade-in-up delay-200">
               {/* Decorative elements */}
               <div className="absolute top-0 right-0 w-40 h-40 sm:w-52 sm:h-52 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-40 h-40 sm:w-52 sm:h-52 md:w-64 md:h-64 bg-white/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
@@ -213,17 +213,17 @@ const Home = () => {
         {/* How It Works Section */}
         <section id="how-it-works" className="px-4 sm:px-6 md:px-8 pb-16 sm:pb-24 md:pb-30">
           <div className="container mx-auto text-center mb-8 sm:mb-10 md:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 sm:mb-4 text-black">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 sm:mb-4 text-black fade-in-up">
               How It Works?
             </h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-700 max-w-xl md:max-w-2xl mx-auto px-4">
+            <p className="text-sm sm:text-base md:text-lg text-gray-700 max-w-xl md:max-w-2xl mx-auto px-4 fade-in-up delay-100">
               Simple steps to edit your images instantly using ImageVerse.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto">
             {/* Step 1 */}
-            <div className="cursor-pointer p-5 sm:p-6 md:p-7 rounded-xl border border-white/10 bg-white/60 backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/70 transition-all duration-300 text-center relative">
+            <div className="cursor-pointer p-5 sm:p-6 md:p-7 rounded-xl border border-white/10 bg-white/60 backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/70 transition-all duration-300 text-center relative fade-in-up delay-200">
               <div className="my-3 sm:my-4 md:my-5 flex justify-center">
                 <UploadCloud className="w-12 h-12 sm:w-13 sm:h-13 md:w-14 md:h-14 text-white bg-[#008994] p-2.5 sm:p-3 rounded-full" />
               </div>
@@ -236,7 +236,7 @@ const Home = () => {
             </div>
 
             {/* Step 2 */}
-            <div className="cursor-pointer p-5 sm:p-6 md:p-7 rounded-xl border border-white/10 bg-white/60 backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/70 transition-all duration-300 text-center relative">
+            <div className="cursor-pointer p-5 sm:p-6 md:p-7 rounded-xl border border-white/10 bg-white/60 backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/70 transition-all duration-300 text-center relative fade-in-up delay-300">
               <div className="my-3 sm:my-4 md:my-5 flex justify-center">
                 <Settings className="w-12 h-12 sm:w-13 sm:h-13 md:w-14 md:h-14 text-white bg-[#008994] p-2.5 sm:p-3 rounded-full" />
               </div>
@@ -249,7 +249,7 @@ const Home = () => {
             </div>
 
             {/* Step 3 */}
-            <div className="cursor-pointer p-5 sm:p-6 md:p-7 rounded-xl border border-white/10 bg-white/60 backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/70 transition-all duration-300 text-center relative">
+            <div className="cursor-pointer p-5 sm:p-6 md:p-7 rounded-xl border border-white/10 bg-white/60 backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/70 transition-all duration-300 text-center relative fade-in-up delay-400">
               <div className="my-3 sm:my-4 md:my-5 flex justify-center">
                 <Download className="w-12 h-12 sm:w-13 sm:h-13 md:w-14 md:h-14 text-white bg-[#008994] p-2.5 sm:p-3 rounded-full" />
               </div>
@@ -267,10 +267,10 @@ const Home = () => {
         <section className="px-4 sm:px-6 md:px-8 pb-16 sm:pb-24 md:pb-30">
           <div className="container mx-auto max-w-5xl">
             <div className="text-center mb-8 sm:mb-10 md:mb-12">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 sm:mb-4 text-black">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 sm:mb-4 text-black fade-in-up">
                 Frequently Asked Questions
               </h2>
-              <p className="text-sm sm:text-base md:text-lg text-gray-700 max-w-xl md:max-w-2xl mx-auto px-4">
+              <p className="text-sm sm:text-base md:text-lg text-gray-700 max-w-xl md:max-w-2xl mx-auto px-4 fade-in-up delay-100">
                 Some FAQ everything you need to know about ImageVerse tools.
               </p>
             </div>
