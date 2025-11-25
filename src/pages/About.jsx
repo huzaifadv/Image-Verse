@@ -149,7 +149,7 @@ const About = () => {
               Join thousands of users who trust ImageVerse for their image editing needs.
             </p>
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/tools')}
               className="px-8 py-4 bg-white text-[#008994] rounded-full text-lg font-semibold hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:scale-105"
             >
               Explore All Tools

@@ -22,6 +22,7 @@ const Home = () => {
         </div>
       ),
       path: '/image-compress',
+       category: 'Optimization'
     },
     {
       id: 'background-remover',
@@ -33,6 +34,7 @@ const Home = () => {
         </div>
       ),
       path: '/background-remover',
+       category: 'Editing'
     },
     {
       id: 'upscaler',
@@ -44,6 +46,7 @@ const Home = () => {
         </div>
       ),
       path: '/image-upscale',
+      category: 'Enhancement'
     },
     {
       id: 'converter',
@@ -55,6 +58,7 @@ const Home = () => {
         </div>
       ),
       path: '/image-converter',
+      category: 'Conversion'
     },
 
     {
@@ -67,6 +71,7 @@ const Home = () => {
         </div>
       ),
       path: '/image-flip',
+      category: 'Editing'
     },
     {
       id: 'cropper',
@@ -78,6 +83,7 @@ const Home = () => {
         </div>
       ),
       path: '/image-cropper',
+      category: 'Transform'
     },
   ];
 
@@ -133,25 +139,34 @@ const Home = () => {
         <section id="tools" className="px-4 sm:px-6 md:px-8 pb-20 sm:pb-28 md:pb-40">
           <div className="container mx-auto">
 
-            <div className="grid grid-cols-1 text-center sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto">
               {tools.map((tool, index) => (
                 <div
                   key={tool.id}
                   onClick={() => handleToolSelect(tool)}
                   className={`cursor-pointer p-5 sm:p-6 md:p-7 rounded-xl border border-white/10 bg-white/50 backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/60 transition-all duration-300 fade-in-up delay-${(index % 3 + 1) * 100}`}
                 >
+
+                  {/* Category Badge */}
+                  <div className="inline-block px-3 py-1 rounded-full text-xs font-medium mb-4 bg-[#008994]/10 text-[#006d76] border border-[#008994]/20">
+                    {tool.category}
+                  </div>
+
                   {/* Tool Icon */}
-                  <div className="my-3 sm:my-4 md:my-5 flex justify-center">
-                    {tool.icon}
+                   {/* Tool Icon */}
+                  <div className="mb-4 flex justify-center">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#008994] to-[#006d76] flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all">
+                      {tool.icon}
+                    </div>
                   </div>
 
                   {/* Tool Name */}
-                  <h3 className="text-lg sm:text-xl font-bold mb-2 text-black tracking-wide">
+                  <h3 className="text-lg text-center sm:text-xl font-bold mb-2 text-black tracking-wide">
                     {tool.name}
                   </h3>
 
                   {/* Tool Description */}
-                  <p className="text-gray-700 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 px-2">
+                  <p className="text-gray-700 text-center text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 px-2">
                     {tool.description}
                   </p>
 

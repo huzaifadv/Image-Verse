@@ -167,12 +167,16 @@ const Tools = () => {
                   </p>
 
                   {/* Try Now Link */}
-                  <div className="flex justify-center">
-                    <div className="flex items-center gap-2 text-[#008994] font-bold text-sm group-hover:gap-3 transition-all">
-                      <span>Try Now</span>
-                      <ArrowUpRight className="w-4 h-4" />
-                    </div>
+                  <div className="mt-3 sm:mt-4 flex justify-center">
+                    <a
+                      href="#"
+                      className="flex items-center underline gap-1 text-[#008994] text-sm sm:text-base font-bold transition"
+                    >
+                      Get Started
+                      <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 font-bold text-[#008994]" />
+                    </a>
                   </div>
+
                 </div>
               ))}
             </div>
