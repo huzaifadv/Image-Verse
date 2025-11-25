@@ -21,7 +21,7 @@ const Home = () => {
           <PackageMinus className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
         </div>
       ),
-      path: '/imagecompress',
+      path: '/image-compress',
     },
     {
       id: 'background-remover',
@@ -32,7 +32,7 @@ const Home = () => {
           <Scissors className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
         </div>
       ),
-      path: '/backgroundremover',
+      path: '/background-remover',
     },
     {
       id: 'upscaler',
@@ -43,7 +43,7 @@ const Home = () => {
           <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
         </div>
       ),
-      path: '/imageupscale',
+      path: '/image-upscale',
     },
     {
       id: 'converter',
@@ -54,19 +54,9 @@ const Home = () => {
           <RefreshCw className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
         </div>
       ),
-      path: '/imageconverter',
+      path: '/image-converter',
     },
-    {
-      id: 'resizer',
-      name: 'Image Resizer',
-      description: 'Resize images to any dimension while maintaining aspect ratio.',
-      icon: (
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#008994] flex items-center justify-center">
-          <Crop className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-        </div>
-      ),
-      path: '/imageresizer',
-    },
+
     {
       id: 'flip',
       name: 'Flip Image',
@@ -76,7 +66,18 @@ const Home = () => {
           <RotateCcw className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
         </div>
       ),
-      path: '/imageflip',
+      path: '/image-flip',
+    },
+    {
+      id: 'cropper',
+      name: 'Image Cropper',
+      description: 'Crop images with precision. Adjust zoom, rotation, and aspect ratio perfectly.',
+      icon: (
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#008994] flex items-center justify-center">
+          <Crop className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+        </div>
+      ),
+      path: '/image-cropper',
     },
   ];
 
@@ -118,7 +119,10 @@ const Home = () => {
             Here you can use image tools including Image Compression, Image Upscaling, Background Removal, Format Conversion, and Image Resizing.
           </p>
 
-          <button className="px-8 sm:px-10 md:px-12 cursor-pointer py-2.5 sm:py-3 bg-[#008994] text-white rounded-full text-sm sm:text-base md:text-[17px] font-medium hover:bg-[#006d76] transition-colors duration-300 shadow-lg hover:shadow-xl fade-in-up delay-300">
+          <button
+            onClick={() => navigate('/tools')}
+            className="px-8 sm:px-10 md:px-12 cursor-pointer py-2.5 sm:py-3 bg-[#008994] text-white rounded-full text-sm sm:text-base md:text-[17px] font-medium hover:bg-[#006d76] transition-colors duration-300 shadow-lg hover:shadow-xl fade-in-up delay-300"
+          >
             Explore Tools
           </button>
 
@@ -362,7 +366,7 @@ const Home = () => {
       </div>
 
       {/* Footer */}
-      
+
 
     </div>
   );

@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cropper from 'react-easy-crop';
 import {
   UploadCloud, Download, X, RefreshCw,
   ArrowLeft, Loader2, Image as ImageIcon,
-  CheckCircle2, AlertCircle, FileType
+  CheckCircle2, AlertCircle, FileType, Crop, RotateCw, ZoomIn
 } from 'lucide-react';
 
 /**
@@ -19,6 +20,13 @@ const ImageConverter = () => {
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState(null);
   const [outputFormat, setOutputFormat] = useState('png');
+
+  // Cropper states
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [showCropper, setShowCropper] = useState(false);
 
   const formats = [
     { value: 'png', label: 'PNG', mime: 'image/png' },
@@ -52,6 +60,8 @@ const ImageConverter = () => {
             name: file.name,
             size: file.size,
             format: fileType,
+            width: img.width,
+            height: img.height,
             isConverted: false,
             convertedBlob: null,
             convertedSize: null
@@ -64,6 +74,56 @@ const ImageConverter = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  // Callback when crop area changes
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  // Create cropped image
+  const createCroppedImage = async (imageSrc, pixelCrop, rotation = 0) => {
+    const image = await createImage(imageSrc);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const maxSize = Math.max(image.width, image.height);
+    const safeArea = 2 * ((maxSize / 2) * Math.sqrt(2));
+
+    canvas.width = safeArea;
+    canvas.height = safeArea;
+
+    ctx.translate(safeArea / 2, safeArea / 2);
+    ctx.rotate((rotation * Math.PI) / 180);
+    ctx.translate(-safeArea / 2, -safeArea / 2);
+
+    ctx.drawImage(
+      image,
+      safeArea / 2 - image.width * 0.5,
+      safeArea / 2 - image.height * 0.5
+    );
+
+    const data = ctx.getImageData(0, 0, safeArea, safeArea);
+
+    canvas.width = pixelCrop.width;
+    canvas.height = pixelCrop.height;
+
+    ctx.putImageData(
+      data,
+      Math.round(0 - safeArea / 2 + image.width * 0.5 - pixelCrop.x),
+      Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y)
+    );
+
+    return canvas;
+  };
+
+  // Helper to create image element
+  const createImage = (url) =>
+    new Promise((resolve, reject) => {
+      const image = new Image();
+      image.addEventListener('load', () => resolve(image));
+      image.addEventListener('error', (error) => reject(error));
+      image.src = url;
+    });
 
   // Handle drag and drop
   const handleDrag = (e) => {
@@ -87,7 +147,7 @@ const ImageConverter = () => {
     }
   };
 
-  // Convert all images
+  // Convert all images with crop
   const convertAllImages = async () => {
     if (images.length === 0) return;
 
@@ -104,20 +164,28 @@ const ImageConverter = () => {
     }
 
     setIsProcessing(false);
+    setShowCropper(false);
   };
 
-  // Convert single image
-  const convertSingleImage = (imageId, imageUrl, mimeType) => {
-    return new Promise((resolve, reject) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
+  // Convert single image with crop
+  const convertSingleImage = async (imageId, imageUrl, mimeType) => {
+    try {
+      let canvas;
 
-      img.onload = () => {
+      // If user has cropped, use cropped image
+      if (croppedAreaPixels) {
+        canvas = await createCroppedImage(imageUrl, croppedAreaPixels, rotation);
+      } else {
+        // Otherwise use original image
+        canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = await createImage(imageUrl);
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
+      }
 
+      return new Promise((resolve, reject) => {
         canvas.toBlob((blob) => {
           if (blob) {
             setImages(prev =>
@@ -137,11 +205,11 @@ const ImageConverter = () => {
             reject(new Error('Failed to convert image'));
           }
         }, mimeType, 0.95);
-      };
-
-      img.onerror = () => reject(new Error('Failed to load image'));
-      img.src = imageUrl;
-    });
+      });
+    } catch (error) {
+      console.error('Error converting image:', error);
+      throw error;
+    }
   };
 
   // Download single converted image
@@ -246,7 +314,7 @@ const ImageConverter = () => {
                 </div>
               </div>
               <p className="text-sm sm:text-base text-gray-700 max-w-2xl">
-                Convert images between different formats - JPG, PNG, WEBP, GIF, and BMP. Fast and easy conversion.
+                Convert images between different formats with cropping support - JPG, PNG, WEBP, GIF, and BMP. Fast and easy conversion.
               </p>
             </div>
             <button
@@ -322,6 +390,111 @@ const ImageConverter = () => {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Image Cropper */}
+              <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-xl p-4 sm:p-6 shadow-lg">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Crop className="w-5 h-5 text-[#008994]" />
+                    <h3 className="text-base sm:text-lg font-semibold text-black">
+                      Crop Image
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setShowCropper(!showCropper)}
+                    className="px-4 py-2 bg-[#008994] text-white rounded-lg text-sm font-medium hover:bg-[#006d76] transition-all"
+                  >
+                    {showCropper ? 'Hide Cropper' : 'Open Cropper'}
+                  </button>
+                </div>
+
+                {showCropper && images.length > 0 && (
+                  <div className="space-y-4">
+                    {/* Cropper Area */}
+                    <div className="relative w-full h-[400px] bg-gray-900 rounded-lg overflow-hidden">
+                      <Cropper
+                        image={images[0].url}
+                        crop={crop}
+                        zoom={zoom}
+                        rotation={rotation}
+                        aspect={undefined}
+                        onCropChange={setCrop}
+                        onZoomChange={setZoom}
+                        onRotationChange={setRotation}
+                        onCropComplete={onCropComplete}
+                      />
+                    </div>
+
+                    {/* Cropper Controls */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* Zoom Control */}
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <ZoomIn className="w-4 h-4 text-[#008994]" />
+                          <label className="text-sm font-medium text-black">Zoom</label>
+                        </div>
+                        <input
+                          type="range"
+                          value={zoom}
+                          min={1}
+                          max={3}
+                          step={0.1}
+                          onChange={(e) => setZoom(parseFloat(e.target.value))}
+                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                        />
+                        <p className="text-xs text-gray-600 text-center">{zoom.toFixed(1)}x</p>
+                      </div>
+
+                      {/* Rotation Control */}
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <RotateCw className="w-4 h-4 text-[#008994]" />
+                          <label className="text-sm font-medium text-black">Rotation</label>
+                        </div>
+                        <input
+                          type="range"
+                          value={rotation}
+                          min={0}
+                          max={360}
+                          step={1}
+                          onChange={(e) => setRotation(parseInt(e.target.value))}
+                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                        />
+                        <p className="text-xs text-gray-600 text-center">{rotation}°</p>
+                      </div>
+
+                      {/* Reset Button */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-black block">Reset</label>
+                        <button
+                          onClick={() => {
+                            setZoom(1);
+                            setRotation(0);
+                            setCrop({ x: 0, y: 0 });
+                          }}
+                          className="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-all"
+                        >
+                          Reset All
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Instructions */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                      <p className="text-xs text-blue-800">
+                        <span className="font-semibold">Tip:</span> Drag to move the crop area, use mouse wheel or pinch to zoom, and adjust rotation with the slider.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {!showCropper && (
+                  <div className="text-center py-8 text-gray-500">
+                    <Crop className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">Click "Open Cropper" to start cropping your image</p>
+                  </div>
+                )}
               </div>
 
               {/* Uploaded Images Thumbnails */}
@@ -432,7 +605,7 @@ const ImageConverter = () => {
                   ) : (
                     <>
                       <RefreshCw className="w-5 h-5" />
-                      Convert to {outputFormat.toUpperCase()}
+                      Crop & Convert to {outputFormat.toUpperCase()}
                     </>
                   )}
                 </button>

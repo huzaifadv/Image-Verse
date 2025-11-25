@@ -14,7 +14,7 @@ A modern image editing web application built with React. All processing happens 
 - **Background Remover** - AI-powered background removal
 - **Image Upscaler** - Enhance resolution up to 4x
 - **Format Converter** - Convert between JPG, PNG, WEBP
-- **Resizer & Flip** - Custom dimensions and orientation
+- **Cropper & Flip** - Custom dimensions and orientation
 
 ## Tech Stack
 

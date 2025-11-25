@@ -1,6 +1,8 @@
+import { Mail } from 'lucide-react';
+
 /**
  * Footer Component
- * Displays copyright information and useful links
+ * Displays copyright information and contact email
  */
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -15,17 +17,22 @@ const Footer = () => {
               <p className="text-white/80 text-sm mt-1">Transform your images, instantly.</p>
             </div>
 
-            {/* Links */}
-            <div className="flex gap-6 text-sm">
-              <a href="#" className="text-white/80 hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="text-white/80 hover:text-white transition-colors">Terms of Service</a>
-              <a href="#" className="text-white/80 hover:text-white transition-colors">Contact</a>
+            {/* Contact Email */}
+            <div className="flex items-center gap-2 text-sm">
+              <Mail className="w-4 h-4 text-white/80" />
+              <span className="text-white/80">Contact:</span>
+              <a
+                href="mailto:ihuzaifa.dev@gmail.com"
+                className="text-white hover:underline transition-colors font-medium"
+              >
+                ihuzaifa.dev@gmail.com
+              </a>
             </div>
           </div>
 
           {/* Copyright */}
           <div className="mt-6 pt-6 border-t border-white/20 text-center text-sm text-white/80">
-            <p>&copy; {new Date().getFullYear()} ImageVerse | Built By Huzaifa</p>
+            <p>&copy; {currentYear} ImageVerse | Built By Huzaifa</p>
           </div>
         </div>
       </footer>
