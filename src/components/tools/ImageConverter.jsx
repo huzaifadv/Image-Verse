@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
+import heic2any from 'heic2any';
 import {
   UploadCloud, Download, X, RefreshCw,
   ArrowLeft, Loader2, Image as ImageIcon,
@@ -9,7 +10,7 @@ import {
 
 /**
  * Image Converter Tool Component
- * Convert images between different formats (JPG, PNG, WEBP, GIF, BMP)
+ * Convert images between different formats (JPG, PNG, WEBP, GIF, BMP, HEIC)
  */
 const ImageConverter = () => {
   const navigate = useNavigate();
@@ -33,7 +34,8 @@ const ImageConverter = () => {
     { value: 'jpeg', label: 'JPG', mime: 'image/jpeg' },
     { value: 'webp', label: 'WEBP', mime: 'image/webp' },
     { value: 'gif', label: 'GIF', mime: 'image/gif' },
-    { value: 'bmp', label: 'BMP', mime: 'image/bmp' }
+    { value: 'bmp', label: 'BMP', mime: 'image/bmp' },
+    { value: 'heic', label: 'HEIC', mime: 'image/heic' }
   ];
 
   // Handle file selection (multiple)
@@ -44,34 +46,64 @@ const ImageConverter = () => {
 
   // Add images to the list
   const addImages = async (files) => {
-    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    const imageFiles = files.filter(file =>
+      file.type.startsWith('image/') || file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')
+    );
 
     for (const file of imageFiles) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const fileType = file.type.split('/')[1] || 'unknown';
+      try {
+        let processedFile = file;
 
-          const newImage = {
-            id: Date.now() + Math.random(),
-            file: file,
-            url: e.target.result,
-            name: file.name,
-            size: file.size,
-            format: fileType,
-            width: img.width,
-            height: img.height,
-            isConverted: false,
-            convertedBlob: null,
-            convertedSize: null
+        // Convert HEIC to PNG for preview and processing
+        if (file.type === 'image/heic' || file.type === 'image/heif' ||
+            file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')) {
+          try {
+            const convertedBlob = await heic2any({
+              blob: file,
+              toType: 'image/png',
+              quality: 0.95
+            });
+            processedFile = new File([convertedBlob], file.name.replace(/\.(heic|heif)$/i, '.png'), {
+              type: 'image/png'
+            });
+          } catch (heicError) {
+            console.error('Error converting HEIC:', heicError);
+            setError('Failed to process HEIC file. Please try another image.');
+            continue;
+          }
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const fileType = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')
+              ? 'heic'
+              : (file.type.split('/')[1] || 'unknown');
+
+            const newImage = {
+              id: Date.now() + Math.random(),
+              file: file,
+              url: e.target.result,
+              name: file.name,
+              size: file.size,
+              format: fileType,
+              width: img.width,
+              height: img.height,
+              isConverted: false,
+              convertedBlob: null,
+              convertedSize: null
+            };
+
+            setImages(prev => [...prev, newImage]);
           };
-
-          setImages(prev => [...prev, newImage]);
+          img.src = e.target.result;
         };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(processedFile);
+      } catch (error) {
+        console.error('Error processing file:', error);
+        setError('Failed to process one or more files.');
+      }
     }
   };
 
@@ -314,7 +346,7 @@ const ImageConverter = () => {
                 </div>
               </div>
               <p className="text-sm sm:text-base text-gray-700 max-w-2xl">
-                Convert images between different formats with cropping support - JPG, PNG, WEBP, GIF, and BMP. Fast and easy conversion.
+                Convert images between different formats with cropping support - JPG, PNG, WEBP, GIF, BMP, and HEIC. Fast and easy conversion.
               </p>
             </div>
             <button
@@ -351,7 +383,7 @@ const ImageConverter = () => {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/*,.heic,.heif"
                 multiple
                 onChange={handleFileSelect}
                 className="hidden"
@@ -570,7 +602,7 @@ const ImageConverter = () => {
                     <input
                       id="add-more-upload"
                       type="file"
-                      accept="image/*"
+                      accept="image/*,.heic,.heif"
                       multiple
                       onChange={handleFileSelect}
                       className="hidden"
@@ -639,8 +671,8 @@ const ImageConverter = () => {
                 <div className="w-12 h-12 bg-[#008994]/10 rounded-full flex items-center justify-center mx-auto mb-3">
                   <FileType className="w-6 h-6 text-[#008994]" />
                 </div>
-                <h4 className="font-semibold text-black mb-2 text-sm sm:text-base">5 Formats</h4>
-                <p className="text-xs sm:text-sm text-gray-700">JPG, PNG, WEBP, GIF, BMP</p>
+                <h4 className="font-semibold text-black mb-2 text-sm sm:text-base">6 Formats</h4>
+                <p className="text-xs sm:text-sm text-gray-700">JPG, PNG, WEBP, GIF, BMP, HEIC</p>
               </div>
 
               <div className="bg-white/60 backdrop-blur-xl border border-white/40 rounded-xl p-4 sm:p-6 shadow-md text-center">
