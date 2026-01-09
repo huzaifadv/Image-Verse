@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { X, Send, Mail, MessageSquare, Loader2, CheckCircle2 } from 'lucide-react';
+import RequestFeature from './RequestFeature';
 
 /**
  * Header Component
  * Navigation header with glassmorphism effect and responsive mobile menu
  */
 const Header = () => {
+  const [isRequestFeatureOpen, setIsRequestFeatureOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -130,10 +132,11 @@ const Header = () => {
           </ul>
 
           <button
-            onClick={openFeedbackModal}
+            isOpen={isRequestFeatureOpen}
+            onClick={() => setIsRequestFeatureOpen(true)}
             className="px-8 cursor-pointer py-3 bg-[#008994] text-white rounded-full text-[15px] font-medium hover:bg-[#006d76] transition-colors duration-300 md:block hidden"
           >
-            Give Feedback
+            Request Feature
           </button>
 
           {/* Mobile Menu Button (Hamburger) */}
@@ -353,6 +356,12 @@ const Header = () => {
           </div>
         </>
       )}
+
+      {/* Request Feature Modal */}
+      <RequestFeature
+        isOpen={isRequestFeatureOpen}
+        onClose={() => setIsRequestFeatureOpen(false)}
+      />
     </>
   );
 };
